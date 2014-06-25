@@ -100,7 +100,13 @@ var _ = {};
       if (test(collection[i]) !== true) {
         results.push(collection[i]);
       }
-    } return results;
+    } return results; 
+    /*_.filter(collection, function(item, test) {
+      var arr = [];
+      if(test(item) === false) {
+        arr.push(item);
+      }
+    });*/
   };
 
   // Produce a duplicate-free version of the array.
@@ -147,6 +153,7 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    _.each(collection, methodName);
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -163,6 +170,17 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
+    var initialValue = 0;
+    if (accumulator != null) {
+      initialValue = accumulator;
+    } else {
+      initialValue = collection[0];
+    }
+    //var initialValue = accumulator;
+    var previousValue = initialValue;
+    for(var i = 0; i < collection.length; i++){
+      previousValue = iterator(previousValue, collection[i]);
+    } return previousValue;
   };
 
   // Determine if the array or object contains a given value (using `===`).
