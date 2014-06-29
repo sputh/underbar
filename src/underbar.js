@@ -162,7 +162,7 @@ var _ = {};
     for(var i = 0; i < collection.length; i++) {
       var answer = functionOrKey.apply(collection[i]);
       results.push(answer);
-    }
+    } 
     
     /*var methodName = functionOrKey;
     for(var i = 0; i < collection.length; i++) {
