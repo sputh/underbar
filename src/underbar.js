@@ -153,25 +153,39 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
-    /*var isFunc = _.isFunction(functionOrKey);
-    return _.map(collection, function(value) {
-      return (isFunc ? method : value[functionOrKey]).apply(value, args);
-    }); 
-    */
     var results = [];
+    var methodName = functionOrKey;
+    
     for(var i = 0; i < collection.length; i++) {
+      var index = collection[i];
+      var answer = methodName.apply(index);
+      if(typeof answer !== 'undefined') {
+        //answer = index[methodName]();
+        results.push(answer);
+        //answer = methodName.apply(index);
+        //results.push(answer);
+      } else {
+        answer = index[methodName]()
+        //results.push(answer);
+        //answer = methodName.apply(index);
+        results.push(answer);
+      }
+    }
+    
+    //Code to call methodName by function
+    /*for(var i = 0; i < collection.length; i++) {
       var answer = functionOrKey.apply(collection[i]);
       results.push(answer);
-    } 
+    } */
     
-    /*var methodName = functionOrKey;
-    for(var i = 0; i < collection.length; i++) {
-      var answer = (collection[i]).methodName;
+    //Code to call methodName by method
+    /*for(var i = 0; i < collection.length; i++) {
+      var index = collection[i];
+      var answer = index[methodName]();
       results.push(answer);
     }*/
   
     return results;
-    
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -189,15 +203,23 @@ var _ = {};
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
     var initialValue = 0;
+    
     if (accumulator != null) {
       initialValue = accumulator;
     } else {
       initialValue = collection[0];
     }
-    //var initialValue = accumulator;
+    
     var previousValue = initialValue;
-    for(var i = 0; i < collection.length; i++){
-      previousValue = iterator(previousValue, collection[i]);
+    
+    if(Array.isArray(collection)) {
+      for (var i = 0; i < collection.length; i++) {
+        previousValue = iterator(previousValue, collection[i]);
+      }
+    } else {
+      for (var key in collection) {
+        previousValue = iterator(previousValue, collection[key]);
+      }
     } return previousValue;
   };
 
@@ -217,6 +239,15 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    var reduced = _.reduce(collection, iterator);
+    if(reduced === true || reduced === undefined) {
+      return true;
+    } else if(reduced === false){
+      return false;
+    } else {
+      return false;
+    }
+    //return reduced;
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
