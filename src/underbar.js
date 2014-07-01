@@ -158,33 +158,14 @@ var _ = {};
     
     for(var i = 0; i < collection.length; i++) {
       var index = collection[i];
-      var answer = methodName.apply(index);
-      if(typeof answer !== 'undefined') {
-        //answer = index[methodName]();
+      if (typeof methodName === "function") {
+        var answer = methodName.apply(index);
         results.push(answer);
-        //answer = methodName.apply(index);
-        //results.push(answer);
       } else {
-        answer = index[methodName]()
-        //results.push(answer);
-        //answer = methodName.apply(index);
+        var answer = index[methodName]();
         results.push(answer);
       }
     }
-    
-    //Code to call methodName by function
-    /*for(var i = 0; i < collection.length; i++) {
-      var answer = functionOrKey.apply(collection[i]);
-      results.push(answer);
-    } */
-    
-    //Code to call methodName by method
-    /*for(var i = 0; i < collection.length; i++) {
-      var index = collection[i];
-      var answer = index[methodName]();
-      results.push(answer);
-    }*/
-  
     return results;
   };
 
@@ -248,6 +229,7 @@ var _ = {};
       return false;
     }
     //return reduced;
+    
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -276,6 +258,10 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    var destination = {};
+    for(var i = 1; i < obj.length; i++) {
+      destination.push(object[i]);
+    }
   };
 
   // Like extend, but doesn't ever overwrite a key that already
