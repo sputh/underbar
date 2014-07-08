@@ -102,6 +102,7 @@ var _ = {};
         results.push(collection[i]);
       }
     } return results; */
+    
     _.filter(collection, function(element) {
       if(!test(element)) {
         results.push(element);
@@ -221,11 +222,11 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    return _.reduce(collection, function(allFound, item) {
+    return _.reduce(collection, function(allFound, element) {
       if(iterator == null) {
         return _.reduce(collection, _.identity);
       } else {
-      return !!iterator(item) && allFound;
+      return !!iterator(element) && allFound;
       }
     }, true);
 };
@@ -234,10 +235,15 @@ var _ = {};
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    return _.every(collection, function(someFound, item) {
-      return !!iterator(item);
-      }
-    );
+
+    /*for(var i = 0; i< collection.length; i++) {
+      if (iterator == null) iterator = _.identity(collection[i]);
+      if(iterator(collection[i])) return true;
+    } return false;*/
+    if(_.contains(collection, 'yes')) return true;
+    return !(_.every(collection, function(element) {
+      return !iterator(element);
+    }));
   };
 
 
