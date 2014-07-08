@@ -282,7 +282,8 @@ var _ = {};
     _.each(Array.prototype.slice.call(arguments, 1), function(source) {
       if (source) {
         for (var prop in source) { 
-          obj[prop] = source[prop];
+          if (obj[prop] === void 0) obj[prop] = source[prop]; 
+          //states that if property is not a key in the object yet, it will add to it
         }
       }
     });
@@ -328,10 +329,16 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    /*var memo;
-    for(var i = 0; i < 25; i++) {
-      memoize.push(func(i));
-    }*/
+    var memo = {};
+    return function() {
+      var key = JSON.stringify(arguments); 
+      //converts all properties to a string to ensure it wil be pulled
+      if (memo.hasOwnProperty(key)) {
+        return memo[key];
+      } else {
+        return memo[key] = func.apply(this, arguments);
+      }
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -341,6 +348,10 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = Array.prototype.slice.call(arguments, 2);
+    //'2' is passed as the second argument so it ignores the 'someFunction' 
+    //and the wait parameter
+    return setTimeout(function(){ return func.apply(null, args); }, wait);
   };
 
 
