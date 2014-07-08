@@ -220,17 +220,14 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    var reduced = _.reduce(collection, iterator);
-    if(reduced === true || reduced === undefined) {
-      return true;
-    } else if(reduced === false){
-      return false;
-    } else {
-      return false;
-    }
-    //return reduced;
-    
-  };
+    return _.reduce(collection, function(allFound, item) {
+      if(iterator == null) {
+        return _.reduce(collection, _.identity);
+      } else {
+      return !!iterator(item) && allFound;
+      }
+    }, true);
+};
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
@@ -258,10 +255,14 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-    var destination = {};
-    for(var i = 1; i < obj.length; i++) {
-      destination.push(object[i]);
-    }
+    _.each(Array.prototype.slice.call(arguments, 1), function(source) {
+      if (source) {
+        for (var prop in source) { 
+          obj[prop] = source[prop];
+        }
+      }
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
@@ -308,6 +309,15 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var memo = [];
+    var testFunction = function (n) {
+      var result = memo[n];
+      if(typeof result !== 'number') {
+        result = func(n);
+        memo[n] = result;
+      }
+      return result;
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
