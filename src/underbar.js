@@ -84,11 +84,12 @@ var _ = {};
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     var results = [];
-    for(var i = 0; i < collection.length; i++){
-      if (test(collection[i]) === true) {
-        results.push(collection[i]);
+    _.each(collection, function(element) {
+      if (test(element)) {
+        results.push(element);
       }
-    } return results;
+    });
+    return results;
   };
 
   // Return all elements of an array that don't pass a truth test.
@@ -96,17 +97,17 @@ var _ = {};
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
     var results = [];
-    for(var i = 0; i < collection.length; i++){
+    /*for(var i = 0; i < collection.length; i++){
       if (test(collection[i]) !== true) {
         results.push(collection[i]);
       }
-    } return results; 
-    /*_.filter(collection, function(item, test) {
-      var arr = [];
-      if(test(item) === false) {
-        arr.push(item);
+    } return results; */
+    _.filter(collection, function(element) {
+      if(!test(element)) {
+        results.push(element);
       }
-    });*/
+    });
+    return results;
   };
 
   // Produce a duplicate-free version of the array.
@@ -233,6 +234,10 @@ var _ = {};
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    return _.every(collection, function(someFound, item) {
+      return !!iterator(item);
+      }
+    );
   };
 
 
@@ -268,6 +273,14 @@ var _ = {};
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    _.each(Array.prototype.slice.call(arguments, 1), function(source) {
+      if (source) {
+        for (var prop in source) { 
+          obj[prop] = source[prop];
+        }
+      }
+    });
+    return obj;
   };
 
 
@@ -309,15 +322,10 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    var memo = [];
-    var testFunction = function (n) {
-      var result = memo[n];
-      if(typeof result !== 'number') {
-        result = func(n);
-        memo[n] = result;
-      }
-      return result;
-    };
+    /*var memo;
+    for(var i = 0; i < 25; i++) {
+      memoize.push(func(i));
+    }*/
   };
 
   // Delays a function for the given number of milliseconds, and then calls
